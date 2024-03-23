@@ -153,7 +153,6 @@
       
     onMounted(async () => {
       token.value = localStorage.getItem("access_token");
-      console.log("Token: ", token.value);
       if (!token.value || token.value == "") {
         return logout();
       }
