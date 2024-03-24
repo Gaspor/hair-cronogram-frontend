@@ -76,7 +76,7 @@
       cronogram: ""
     });
     const token = ref();
-    const username = ref("");
+    const username = ref();
 
     async function getAllCronograms() {
       try {
