@@ -34,6 +34,7 @@ async function signIn() {
     });
   
     localStorage.setItem("access_token", api.data.access_token);
+    localStorage.setItem("username", api.data.username);
     router.push({ name: "Home" });
   } catch (error) {
     console.log(error.response.data);
@@ -79,6 +80,7 @@ const submitForm = () => {
 
 onMounted(async () => {
   localStorage.removeItem("access_token");
+  localStorage.removeItem("username");
 
 });
 </script>

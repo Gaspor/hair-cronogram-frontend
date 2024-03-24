@@ -38,6 +38,7 @@
             });
         
             localStorage.setItem("access_token", api.data.access_token);
+            localStorage.setItem("username", api.data.username);
             router.push({ name: "Home" });
             
         } catch (error) {
@@ -90,6 +91,7 @@
 
     onMounted(async () => {
         localStorage.removeItem("access_token");
+        localStorage.removeItem("username");
 
     });
 </script>

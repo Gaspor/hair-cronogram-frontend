@@ -1,23 +1,38 @@
 <template>
-  <div class="mt-10" style="display: grid; justify-items: center">
+  <v-container class="">
+    <v-row>
+      <v-col class="">
+        <h1>Olá, {{ username }}!</h1>
+      </v-col>
+      <v-col class="text-end justify-content-center">
+          <v-btn class="bg-red" @click="logout()">Sair</v-btn>
+      </v-col>
+    </v-row>
+  </v-container>
+  <div class="" style="display: grid; justify-items: center">
     <v-list>
       <v-list-item v-for="cronogram in cronograms" :key="cronogram.id">
         <v-card v-bind:class="{ 'bg-green': cronogram.isActivated, 'bg-red': !cronogram.isActivated }">
           <div>
-            <v-card-title>{{ cronogram.name }}</v-card-title>
-            <v-btn icon @click="addStage(), setCronogramId(cronogram.id)">
-              <v-icon>mdi-plus</v-icon>
-            </v-btn>
+            <v-card-title><h2>{{ cronogram.name }}</h2></v-card-title>
+            <div class="text-center">
+              <v-btn icon @click="addStage(), setCronogramId(cronogram.id)">
+                <v-icon>mdi-plus</v-icon>
+              </v-btn>
+              
+            </div>
           </div>
           <v-divider></v-divider>
           <v-list-item v-for="stage in cronogram.stages" :key="cronogram.stages.id">
-            <h1>{{ stage.name }}</h1>
-            <v-btn v-if="!stage.isCompleted" icon @click="completeStage(stage.id, true)">
-              <v-icon>mdi-check</v-icon>
-            </v-btn>
-            <v-btn v-if="stage.isCompleted" icon @click="completeStage(stage.id, false)">
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
+            <h4>{{ stage.name }}</h4>
+            <div class="text-center">
+              <v-btn v-if="!stage.isCompleted" icon @click="completeStage(stage.id, true)">
+                <v-icon>mdi-check</v-icon>
+              </v-btn>
+              <v-btn v-if="stage.isCompleted" icon @click="completeStage(stage.id, false)">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </div>
           </v-list-item>
         </v-card>
       </v-list-item>
@@ -61,6 +76,7 @@
       cronogram: ""
     });
     const token = ref();
+    const username = ref("");
 
     async function getAllCronograms() {
       try {
@@ -148,11 +164,13 @@
     
     function logout() {
         localStorage.removeItem("access_token");
+        localStorage.removeItem("username");
         router.push({ name: "Login" });
     }
       
     onMounted(async () => {
       token.value = localStorage.getItem("access_token");
+      username.value = localStorage.getItem("username");
       if (!token.value || token.value == "") {
         return logout();
       }
