@@ -2,7 +2,7 @@
   <v-container class="">
     <v-row>
       <v-col class="">
-        <h1>Olá, {{ username }}!</h1>
+        <h1>Olá, {{ username?.value }}!</h1>
       </v-col>
       <v-col class="text-end justify-content-center">
           <v-btn class="bg-red" @click="logout()">Sair</v-btn>
@@ -79,6 +79,8 @@
     const username = ref();
 
     async function getAllCronograms() {
+      username.value = localStorage.getItem("username");
+      console.log(username.value);
       try {
         const api = await axiosInstance.get("cronogram", {
           headers: {
@@ -170,7 +172,6 @@
       
     onMounted(async () => {
       token.value = localStorage.getItem("access_token");
-      username.value = localStorage.getItem("username");
       if (!token.value || token.value == "") {
         return logout();
       }

@@ -32,9 +32,9 @@ async function signIn() {
       email: form.email.value,
       password: form.password.value
     });
-  
-    localStorage.setItem("access_token", api.data.access_token);
+    
     localStorage.setItem("username", api.data.username);
+    localStorage.setItem("access_token", api.data.access_token);
     router.push({ name: "Home" });
   } catch (error) {
     console.log(error.response.data);
