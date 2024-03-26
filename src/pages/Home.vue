@@ -58,9 +58,8 @@
 
 <script setup>
     import { useRouter } from 'vue-router';
-    import { ref } from 'vue';
+    import { ref, onMounted } from 'vue';
     import { axiosInstance } from '../services/api'
-    import { onMounted } from 'vue';
     import ModalCronogram from '../components/CreateCronogram.vue'
     
     const router = useRouter();
@@ -75,34 +74,22 @@
       name: "",
       cronogram: ""
     });
-    const token = ref();
     const username = ref();
 
     async function getUserData() {
       try {
-        const api = await axiosInstance.get("users", {
-          headers: {
-            'Content-type': 'application/json',
-            'Authorization': 'Bearer ' + token.value
-          }
-        });
+        const api = await axiosInstance.get("users");
 
-        console.log(api.data.username);
         username.value = api.data.username;
       } catch (error) {
-        // logout();
+        logout();
 
       }
     }
 
     async function getAllCronograms() {
       try {
-        const api = await axiosInstance.get("cronogram", {
-          headers: {
-            'Content-type': 'application/json',
-            'Authorization': 'Bearer ' + token.value
-          }
-        });
+        const api = await axiosInstance.get("cronogram");
 
         cronograms.value = api.data;
       } catch (error) {
@@ -119,11 +106,7 @@
     async function createCronogram(){
       try {
         const api = await axiosInstance.post("cronogram", {
-          name: newCronogram.value.name,
-          headers: {
-            'Content-type': 'application/json',
-            'Authorization': 'Bearer ' + token.value
-          }
+          name: newCronogram.value.name
         });
 
         await getAllCronograms();
@@ -143,10 +126,6 @@
       try {
         const api = await axiosInstance.put(`stage/completed/${stageId}`, {
           isCompleted,
-          headers: {
-            'Content-type': 'application/json',
-            'Authorization': 'Bearer ' + token.value
-          }
         });
 
         await getAllCronograms();
@@ -163,11 +142,7 @@
       try {
         const api = await axiosInstance.post("stage", {
           name: newStage.value.name,
-          cronogram: cronogramId.value,
-          headers: {
-            'Content-type': 'application/json',
-            'Authorization': 'Bearer ' + token.value
-          }
+          cronogram: cronogramId.value
         });
 
         cronogramId.value = 0;
@@ -179,17 +154,12 @@
       dialogStage.value = false;
     }
     
-    function logout() {
-        localStorage.removeItem("access_token");
-        router.push({ name: "Login" });
+    async function logout() {
+      localStorage.removeItem("access_token");
+      await router.push({ name: "Login" });
     }
       
     onMounted(async () => {
-      token.value = localStorage.getItem("access_token");
-      if (!token.value || token.value == "") {
-        return logout();
-      }
-
       getUserData();
       getAllCronograms();
     });

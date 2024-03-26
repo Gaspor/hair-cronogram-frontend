@@ -20,9 +20,8 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { ref, computed } from 'vue';
+import { onMounted, ref, computed } from 'vue';
 import { axiosInstance } from '../services/api'
-import { onMounted } from 'vue';
 
 const router = useRouter();
 
@@ -32,11 +31,14 @@ async function signIn() {
       email: form.email.value,
       password: form.password.value
     });
+
+    localStorage.setItem('access_token', api.data.access_token);
+
+    // store.commit.setToken(api.data.access_token);
     
-    localStorage.setItem("access_token", api.data.access_token);
-    router.push({ name: "Home" });
+    await router.push({ name: "Home" });
   } catch (error) {
-    console.log(error.response.data);
+   console.log(error); 
   }
 }
 

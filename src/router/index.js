@@ -7,6 +7,7 @@
 
 // Composables
 import { createRouter, createWebHistory } from 'vue-router'
+import { store } from '../stores/auth'
 import HomeView from '@/pages/Home.vue'
 import LoginView from '@/pages/Login.vue'
 import RegisterView from '@/pages/Register.vue'
@@ -18,6 +19,9 @@ const routes = [
     path: '/',
     name: "Home",
     component: HomeView,
+    meta: {
+      requiresAuth: true
+    }
   },
   {
     path: '/login',
@@ -44,6 +48,14 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes,
-})
+});
+
+router.beforeEach((to, from, next) => {
+  if(to.meta.requiresAuth && !localStorage.getItem('access_token')) {
+    return next("/login");
+  }
+
+  return next();
+});
 
 export default router
