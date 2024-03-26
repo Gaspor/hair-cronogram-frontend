@@ -11,6 +11,7 @@ import HomeView from '@/pages/Home.vue'
 import LoginView from '@/pages/Login.vue'
 import RegisterView from '@/pages/Register.vue'
 import PageNotFoundView from '@/pages/404.vue'
+import ActiveAccount from '@/pages/ActiveAccount.vue'
 
 const routes = [
   {
@@ -27,6 +28,11 @@ const routes = [
     path: '/register',
     name: 'Register',
     component: RegisterView,
+  },
+  {
+    path: '/active',
+    name: 'ActiveAccount',
+    component: ActiveAccount
   },
   {
     path: '/:pathMatch(.*)*',

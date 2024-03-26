@@ -2,7 +2,7 @@
   <v-container class="">
     <v-row>
       <v-col class="">
-        <h1>Olá, {{ username?.value }}!</h1>
+        <h1>Olá, {{ username }}!</h1>
       </v-col>
       <v-col class="text-end justify-content-center">
           <v-btn class="bg-red" @click="logout()">Sair</v-btn>
@@ -78,9 +78,24 @@
     const token = ref();
     const username = ref();
 
+    async function getUserData() {
+      try {
+        const api = await axiosInstance.get("users", {
+          headers: {
+            'Content-type': 'application/json',
+            'Authorization': 'Bearer ' + token.value
+          }
+        });
+
+        console.log(api.data.username);
+        username.value = api.data.username;
+      } catch (error) {
+        // logout();
+
+      }
+    }
+
     async function getAllCronograms() {
-      username.value = localStorage.getItem("username");
-      console.log(username.value);
       try {
         const api = await axiosInstance.get("cronogram", {
           headers: {
@@ -166,7 +181,6 @@
     
     function logout() {
         localStorage.removeItem("access_token");
-        localStorage.removeItem("username");
         router.push({ name: "Login" });
     }
       
@@ -175,6 +189,8 @@
       if (!token.value || token.value == "") {
         return logout();
       }
+
+      getUserData();
       getAllCronograms();
     });
 </script>

@@ -33,7 +33,6 @@ async function signIn() {
       password: form.password.value
     });
     
-    localStorage.setItem("username", api.data.username);
     localStorage.setItem("access_token", api.data.access_token);
     router.push({ name: "Home" });
   } catch (error) {
@@ -80,7 +79,6 @@ const submitForm = () => {
 
 onMounted(async () => {
   localStorage.removeItem("access_token");
-  localStorage.removeItem("username");
 
 });
 </script>
