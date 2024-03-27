@@ -1,18 +1,27 @@
 <template>
-  <div class="form-card">
+  <div class="form-card" style="margin-top: 30vh;">
     <form @submit.prevent="submitForm">
       <div>
-      <label for="email">Email:</label>
-        <span class="error" v-if="errors.email && !isEmailValid">{{ errors.email }}</span>
-        <input type="email" id="email" v-model="form.email.value" @blur="validateField('email')" />
-
-        <label for="password">Senha:</label>
-        <span class="error" v-if="errors.password && !isPasswordValid">{{ errors.password }}</span>
-        <input type="password" id="password" v-model="form.password.value" @blur="validateField('password')" />
+        <label class="mb-0" for="email">Email:</label>
+        <input class="mb-0" type="email" placeholder="john@doe.com" id="email" v-model="form.email.value" @blur="validateField('email')" />
+        <div class="text-end">
+          <span class="error" v-if="errors.email && !isEmailValid">{{ errors.email }}</span>
+        </div>
+        
+        <label class="mt-2 mb-0" for="password">Senha:</label>
+        <input class="mb-0" type="password" placeholder="********" id="password" v-model="form.password.value" @blur="validateField('password')" />
+        <div class="text-end">
+          <span class="error" v-if="errors.password && !isPasswordValid">{{ errors.password }}</span>
+        </div>
+      </div>
+      <div class="text-center mt-2">
+        <span v-if="errors.login" class="error">{{ errors.login }}</span>
       </div>
 
-      <v-btn type="submit">Submit</v-btn>
-      <h6>Ainda não tem conta? <a @click="register">Registre-se aqui!</a></h6>
+      <div class="text-end mt-2">
+        <v-btn class="bg-blue" type="submit">Entrar</v-btn>
+      </div>
+      <h6 class="text-center mt-2">Ainda não tem conta? <u style="color: blue;"><a @click="register">Registre-se aqui!</a></u></h6>
       
     </form>
   </div>
@@ -34,11 +43,9 @@ async function signIn() {
 
     localStorage.setItem('access_token', api.data.access_token);
 
-    // store.commit.setToken(api.data.access_token);
-    
     await router.push({ name: "Home" });
   } catch (error) {
-   console.log(error); 
+    errors.value.login = "Não foi possível fazer o login."
   }
 }
 
@@ -59,10 +66,10 @@ const isEmailValid = computed(() => form.email.value.includes('@'));
 const validateField = (field) => {
   errors.value[field] = '';
   if (field === 'password' && !isPasswordValid.value) {
-    errors.value.password = 'Password is required.';
+    errors.value.password = 'A senha não pode ser vazia.';
   }
   if (field === 'email' && !isEmailValid.value) {
-    errors.value.email = 'Invalid email address.';
+    errors.value.email = 'Email inválido.';
   }
 };
 
@@ -70,7 +77,7 @@ const submitForm = () => {
   errors.value = {};
   validateField('password');
   validateField('email');
-  console.log(errors.value.password);
+  
   if (errors.value.email === "" && errors.value.password === "") {
     console.log('Form submitted successfully!', form);
     signIn();

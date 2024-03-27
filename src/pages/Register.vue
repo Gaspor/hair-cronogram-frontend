@@ -1,21 +1,30 @@
 <template>
-    <div class="form-card">
+    <div class="form-card" style="margin-top: 30vh;">
         <form @submit.prevent="submitForm">
             <div>
-                <label for="username">Nome:</label>
-                <span class="error" v-if="errors.username && !isUsernameValid">{{ errors.username }}</span>
-                <input type="text" id="username" v-model="form.username.value" @blur="validateField('username')" />
-
-                <label for="email">Email:</label>
-                <span class="error" v-if="errors.email && !isEmailValid">{{ errors.email }}</span>
-                <input type="email" id="email" v-model="form.email.value" @blur="validateField('email')" />
-
-                <label for="password">Senha:</label>
-                <span class="error" v-if="errors.password && !isPasswordValid">{{ errors.password }}</span>
-                <input type="password" id="password" v-model="form.password.value" @blur="validateField('password')" />
+                <label class="mb-0" for="username">Nome:</label>
+                <input class="mb-0" type="text" placeholder="John Doe" id="username" v-model="form.username.value" @blur="validateField('username')" />
+                <div class="text-end">
+                    <span class="error" v-if="errors.username && !isUsernameValid">{{ errors.username }}</span>
+                </div>
+                
+                <label class="mt-2 mb-0" for="email">Email:</label>
+                <input class="mb-0" type="email" placeholder="john@doe.com" id="email" v-model="form.email.value" @blur="validateField('email')" />
+                <div class="text-end">
+                    <span class="error" v-if="errors.email && !isEmailValid">{{ errors.email }}</span>
+                </div>
+                
+                <label class="mt-2 mb-0" for="password">Senha:</label>
+                <input class="mb-0" type="password" placeholder="********" id="password" v-model="form.password.value" @blur="validateField('password')" />
+                <div class="text-end">
+                    <span class="error" v-if="errors.password && !isPasswordValid">{{ errors.password }}</span>
+                </div>
             </div>
 
-            <v-btn type="submit">Submit</v-btn>
+            <div class="text-end mt-2">
+                <v-btn class="bg-red mr-1" @click="cancel()">Cancelar</v-btn>
+                <v-btn class="bg-blue" type="submit">Cadastrar</v-btn>
+            </div>
             
         </form>
     </div>
@@ -60,13 +69,13 @@
     const validateField = (field) => {
         errors.value[field] = '';
         if (field === 'password' && !isPasswordValid.value) {
-            errors.value.password = 'Password is required.';
+            errors.value.password = 'A senha não pode ser vazia.';
         }
         if (field === 'email' && !isEmailValid.value) {
-            errors.value.email = 'Invalid email address.';
+            errors.value.email = 'Email inválido.';
         }
         if (field === 'username' && !isUsernameValid.value) {
-            errors.value.username = 'Username is required';
+            errors.value.username = 'Nome de usuário não pode ser vazio.';
         }
     };
 

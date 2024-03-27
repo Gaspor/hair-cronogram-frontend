@@ -10,9 +10,9 @@
     </v-row>
   </v-container>
   <div class="" style="display: grid; justify-items: center">
-    <v-list>
+    <v-list style="min-width: 300px;">
       <v-list-item v-for="cronogram in cronograms" :key="cronogram.id">
-        <v-card v-bind:class="{ 'bg-green': cronogram.isActivated, 'bg-red': !cronogram.isActivated }">
+        <v-card v-bind:class="{ 'bg-light-green-darken-4': cronogram.isActivated, 'bg-red': !cronogram.isActivated }">
           <div>
             <v-card-title><h2>{{ cronogram.name }}</h2></v-card-title>
             <div class="text-center">
@@ -23,8 +23,8 @@
             </div>
           </div>
           <v-divider></v-divider>
-          <v-list-item v-for="stage in cronogram.stages" :key="cronogram.stages.id">
-            <h4>{{ stage.name }}</h4>
+          <v-list-item class="rounde" style="border: 2px solid ;" v-bind:class="{ 'bg-green-lighten-1': cronogram.isActivated, 'bg-red-lighten-2': !cronogram.isActivated }" v-for="stage in cronogram.stages" :key="cronogram.stages.id" >
+            <h4 class="text-white">{{ stage.name }}</h4>
             <div class="text-center">
               <v-btn v-if="!stage.isCompleted" icon @click="completeStage(stage.id, true)">
                 <v-icon>mdi-check</v-icon>
@@ -40,18 +40,18 @@
   </div> 
 
   <div style="display: grid; justify-items: center">
-    <v-list-item-action class="">
+    <v-list-item-action class="text-center">
       <v-btn class="mr-5" icon @click="addCronogram()">
         <v-icon>mdi-plus</v-icon>
       </v-btn>
     </v-list-item-action>
   </div>
 
-  <ModalCronogram :dialogCronogram="dialogCronogram" @change="dialogCronogram = $event" @salvar="createCronogram()">
+  <ModalCronogram :dialogState="dialogCronogram" :loadingState="loading" @change="dialogCronogram = $event" @salvar="createCronogram()">
     <v-text-field label="Nome do cronograma" v-model="newCronogram.name" />
   </ModalCronogram>
 
-  <ModalCronogram :dialogCronogram="dialogStage" @change="dialogStage = $event" @salvar="createStage()">
+  <ModalCronogram :dialogState="dialogStage" :loadingState="loading" @change="dialogStage = $event" @salvar="createStage()">
     <v-text-field label="Nome da etapa" v-model="newStage.name" />
   </ModalCronogram>
 </template>
@@ -75,6 +75,7 @@
       cronogram: ""
     });
     const username = ref();
+    const loading = ref(false);
 
     async function getUserData() {
       try {
@@ -104,6 +105,7 @@
     }
 
     async function createCronogram(){
+      loading.value = true;
       try {
         const api = await axiosInstance.post("cronogram", {
           name: newCronogram.value.name
@@ -113,7 +115,8 @@
       } catch (error) {
         console.log(error);
       }
-
+      
+      loading.value = false;
       dialogCronogram.value = false;
     }
 
@@ -139,18 +142,20 @@
     }
 
     async function createStage() {
+      loading.value = true;
       try {
         const api = await axiosInstance.post("stage", {
           name: newStage.value.name,
           cronogram: cronogramId.value
         });
-
+        
         cronogramId.value = 0;
         await getAllCronograms();
       } catch (error) {
         console.log(error);
       }
-
+      
+      loading.value = false;
       dialogStage.value = false;
     }
     
