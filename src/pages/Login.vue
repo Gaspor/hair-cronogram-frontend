@@ -19,7 +19,7 @@
       </div>
 
       <div class="text-end mt-2">
-        <v-btn class="bg-blue" type="submit">Entrar</v-btn>
+        <v-btn :loading="loading" class="bg-blue" type="submit">Entrar</v-btn>
       </div>
       <h6 class="text-center mt-2">Ainda não tem conta? <u style="color: blue;"><a @click="register">Registre-se aqui!</a></u></h6>
       
@@ -33,20 +33,23 @@ import { onMounted, ref, computed } from 'vue';
 import { axiosInstance } from '../services/api'
 
 const router = useRouter();
+const loading = ref(false);
 
 async function signIn() {
+  loading.value = true;
   try {
     const api = await axiosInstance.post('auth/login', {
       email: form.email.value,
       password: form.password.value
     });
-
+    
     localStorage.setItem('access_token', api.data.access_token);
-
+    
     await router.push({ name: "Home" });
   } catch (error) {
     errors.value.login = "Não foi possível fazer o login."
   }
+  loading.value = false;
 }
 
 function register() {
@@ -84,6 +87,7 @@ const submitForm = () => {
   } else {
     console.log('Form has validation errors. Please correct them.', errors);
   }
+
 };
 
 onMounted(async () => {
