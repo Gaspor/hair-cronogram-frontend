@@ -21,9 +21,13 @@
                 </div>
             </div>
 
+            <div class="text-center mt-2">
+                <span v-if="errors.register" class="error">{{ errors.register }}</span>
+              </div>
+
             <div class="text-end mt-2">
                 <v-btn class="bg-red mr-1" @click="cancel()">Cancelar</v-btn>
-                <v-btn class="bg-blue" type="submit">Cadastrar</v-btn>
+                <v-btn :loading="loading" class="bg-blue" type="submit">Cadastrar</v-btn>
             </div>
             
         </form>
@@ -37,14 +41,22 @@
     import { onMounted } from 'vue';
 
     const router = useRouter();
+    const loading = ref(false);
 
     async function signIn() {
+        loading.value = true;
         try {
             const api = await axiosInstance.post('auth/register', {
                 username: form.username.value,
                 email: form.email.value,
                 password: form.password.value,
             });
+            
+            loading.value = false;
+            if(api.data.error) {
+                errors.value.register = "Ocorreu um erro ao se registrar!";
+                return;
+            }
 
             localStorage.setItem('access_token', api.data.access_token);
             
@@ -52,6 +64,7 @@
         } catch (error) {
             console.log(error.response.data);
         }
+        loading.value = false;
     }
 
     const form = {
