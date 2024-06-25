@@ -35,6 +35,13 @@ import { axiosInstance } from '../services/api'
 const router = useRouter();
 const loading = ref(false);
 
+async function starting() {
+  await axiosInstance.get('/');
+
+}
+
+starting();
+
 async function signIn() {
   loading.value = true;
   try {
