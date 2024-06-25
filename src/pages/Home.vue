@@ -30,7 +30,7 @@
                 <v-icon>mdi-check</v-icon>
               </v-btn>
               <v-btn v-if="stage.isCompleted" icon @click="completeStage(stage.id, false)">
-                <v-icon>mdi-delete</v-icon>
+                <v-icon>mdi-close</v-icon>
               </v-btn>
             </div>
           </v-list-item>
